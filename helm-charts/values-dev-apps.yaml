@@ -1,4 +1,4 @@
-argo-cd:
+argocd:
   server:     
     additionalApplications: 
       - name: argocd-deploy-secret
@@ -34,41 +34,19 @@ argo-cd:
           helm:
             version: v3
             valueFiles:
-            # - values.yaml
+            - values.yaml
             - values-base.yaml  
-            - values-dev.yaml                    
-            - values-dev-app.yaml
+            - values-base-dev.yaml                    
+            - values-monitoring-dev.yaml
           path: helm-charts/argocd
-          repoURL: git@github.com:paas2/argo-monitoring.git
-          targetRevision: HEAD  
+          repoURL: git@github.com:paas2/argo.git
+          targetRevision: canpolat 
                       
 
       - name: infra-apps  
         namespace: argocd
         annotations:
-          argocd.argoproj.io/sync-wave: "1"      
-        destination:
-          namespace: argocd
-          server: https://kubernetes.default.svc
-        project: argocd
-        source:
-          helm:
-            version: v3
-            valueFiles:
-            - values-base.yaml 
-            - values-dev.yaml           
-          path: ./
-          repoURL: git@github.com:paas2/monitoring-infra-apps.git
-          targetRevision: HEAD  
-        syncPolicy:
-          automated:
-            selfHeal: true
-            prune: true        
-
-      - name: monitoring-apps
-        namespace: argocd
-        annotations:
-          argocd.argoproj.io/sync-wave: "1"      
+          argocd.argoproj.io/sync-wave: "1"     
         destination:
           namespace: argocd
           server: https://kubernetes.default.svc
@@ -78,29 +56,32 @@ argo-cd:
             version: v3
             valueFiles:
             - values.yaml 
-          path: apps
-          repoURL: git@github.com:paas2/monitoring-apps.git
-          targetRevision: HEAD  
+            - values-dev.yaml 
+          path: ./
+          repoURL: git@github.com:paas2/monitoring-infra-apps.git 
+          targetRevision: HEAD
         syncPolicy:
           automated:
             selfHeal: true
-            prune: true    
-
-      - name: monitoring-app-projects
+            prune: true        
+        
+      - name: monitoring-apps  
         namespace: argocd
         annotations:
-          argocd.argoproj.io/sync-wave: "1"      
+          argocd.argoproj.io/sync-wave: "1"     
         destination:
           namespace: argocd
           server: https://kubernetes.default.svc
         project: argocd
         source:
-          path: projects
-          repoURL: git@github.com:paas2/monitoring-apps.git 
-          targetRevision: HEAD  
-          directory:
-            recurse: true
-            jsonnet: {}
+          helm:
+            version: v3
+            valueFiles:
+            - values.yaml 
+            - values-dev.yaml 
+          path: ./
+          repoURL: git@github.com:paas2-security/monitoring-apps.git 
+          targetRevision: HEAD
         syncPolicy:
           automated:
             selfHeal: true
