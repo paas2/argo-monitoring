@@ -26,7 +26,7 @@ argo-cd:
       - name: AVP_K8S_ROLE
         value: monitoring-dev  
       - name: VAULT_ADDR
-        value: https://host.minikube.internal:8400 
+        value: http://host.minikube.internal:8200 
       - name: AVP_TYPE
         value: vault  
       - name: AVP_AUTH_TYPE
