@@ -1,4 +1,4 @@
-argocd:
+argo-cd:
   server:     
     additionalApplications: 
       - name: argocd-deploy-secret
@@ -40,8 +40,7 @@ argocd:
             - values-monitoring-dev.yaml
           path: helm-charts/argocd
           repoURL: git@github.com:paas2/argo.git
-          targetRevision: canpolat 
-                      
+          targetRevision: canpolat                  
 
       - name: infra-apps  
         namespace: argocd
